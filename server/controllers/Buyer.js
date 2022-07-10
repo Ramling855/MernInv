@@ -1,5 +1,5 @@
 // const buyerModel = require("../models/BuyerSupplierModel");
-const buyerModel =require("../models/BuyerSuplierModel")
+const buyerModel = require("../models/BuyerSuplierModel");
 class BuyerController {
   static getData = async (req, res) => {
     try {
@@ -19,6 +19,16 @@ class BuyerController {
       res.send("data saved sucessfully");
     } catch (err) {
       res.send(err);
+    }
+  };
+
+  static getCompany = async (req, res) => {
+    try {
+      const companyName = await buyerModel.find();
+      console.log("Company", companyName);
+      res.send(companyName);
+    } catch (err) {
+      console.log(err);
     }
   };
 

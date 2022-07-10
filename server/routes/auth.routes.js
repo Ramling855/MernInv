@@ -9,7 +9,7 @@ const {
 } = require("../controllers/auth.controller");
 const { encryptPassword } = require("../middlewares/auth.middleware");
 
-authrouter.post("/signup", encryptPassword, signup);
+authrouter.post("/signup", signup);
 authrouter.post("/login", login);
 //By neha
 authrouter.get("/userdata/:id", getUserData);

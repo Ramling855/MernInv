@@ -43,7 +43,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-export default function Payment() {
+export default function AdminHistory() {
   const num = useSelector((state) => state.Data);
   const [rows, setRows] = useState([]);
   const [key, setKey] = useState(1);
@@ -65,7 +65,7 @@ export default function Payment() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8080/userOrder?email=${tokenData.email}`)
+      .get(`http://localhost:8080/order`)
       .then((res) => {
         setRows(res.data);
       })
@@ -74,40 +74,40 @@ export default function Payment() {
       });
   },[]);
   
-  useEffect(() => {
-    axios
-      .get(`http://localhost:8080/userOrder?email=${tokenData.email}`)
-      .then((res) => {
-        setRows(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  },[key]);
+//   useEffect(() => {
+//     axios
+//       .get(`http://localhost:8080/userOrder?email=${tokenData.email}`)
+//       .then((res) => {
+//         setRows(res.data);
+//       })
+//       .catch((err) => {
+//         console.log(err);
+//       });
+//   },[key]);
 
-  const statusHandler = (e) => {
-    console.log(e);
-    setPayment("Sucess");
-    alert("Payment Sucessfull");
-  };
+//   const statusHandler = (e) => {
+//     console.log(e);
+//     setPayment("Sucess");
+//     alert("Payment Sucessfull");
+//   };
 
-  const onMailsend = (e) => {
-    setMail("Sucess");
-    alert("Payment Sucessfull");
-  };
+//   const onMailsend = (e) => {
+//     setMail("Sucess");
+//     alert("Payment Sucessfull");
+//   };
 
-const Delete=(e)=>{
-console.log(e._id,"daleteaa")
+// const Delete=(e)=>{
+// console.log(e._id,"daleteaa")
 
-  axios
-  .delete(`http://localhost:8080/userOrder/delete?id=${e._id}`)
-  .then((res) => {
-    setKey(key+1)
-  })
-  .catch((err) => {
-    console.log(err);
-  });
-}
+//   axios
+//   .delete(`http://localhost:8080/userOrder/delete?id=${e._id}`)
+//   .then((res) => {
+//     setKey(key+1)
+//   })
+//   .catch((err) => {
+//     console.log(err);
+//   });
+// }
 
 
   return (
@@ -119,12 +119,10 @@ console.log(e._id,"daleteaa")
             alignItem: "center",
           }}
         >
-          Payment History :{`${tokenData.first} ${tokenData.last}`}
+        Sold out Products  History of :{`${tokenData.first} ${tokenData.last}`}
         </h3>
         <Grid container direction="row" justifyContent="right">
-          <h4>*Click on payment status for payment</h4>
         </Grid>
-        {/* // Product Table */}
         <TableContainer component={Paper} mt={2} ml={3}>
           <Table sx={{ minWidth: 700 }} aria-label="customized table">
             <TableHead>
@@ -136,10 +134,7 @@ console.log(e._id,"daleteaa")
                 <StyledTableCell align="center">Qty</StyledTableCell>
                 <StyledTableCell align="center">Price</StyledTableCell>
                 <StyledTableCell align="center">Total Price</StyledTableCell>
-                <StyledTableCell align="center">Payment</StyledTableCell>
-                <StyledTableCell align="center">Mail Send</StyledTableCell>
-                <StyledTableCell align="center">Delete order</StyledTableCell>
-
+                
               </TableRow>
             </TableHead>
             <TableBody>
@@ -158,28 +153,13 @@ console.log(e._id,"daleteaa")
                     {row.totalPrice}
                   </StyledTableCell>
                   
-                  <StyledTableCell align="center">
-                    
-                    <span onClick={() => statusHandler(row)}>
-                      Status:{payment}
-                    </span>
-                  </StyledTableCell>
-                  <StyledTableCell align="center" style={{ color: "red" }}>
-                    Status:{mail}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    <button onClick={()=>Delete(row)}>delete</button>
-                  </StyledTableCell>
                 </StyledTableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
-        {/* <Stack spacing={2} sx={{ mt: 2, ml: 42 }}>
-          <Pagination count={10} variant="outlined" shape="rounded" />
-        </Stack> */}
+        
       </div>
-      <PaymentModal onClick={onMailsend} />
     </div>
   );
 }

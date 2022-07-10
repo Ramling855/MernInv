@@ -2,8 +2,9 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
   value: 0,
-  price:0,
-  token:{}
+  price:"",
+  token:{},
+  new:""
 }
 
 export const DataSlice = createSlice({
@@ -17,12 +18,16 @@ export const DataSlice = createSlice({
       state.token = action.payload
     },
     incrementByAmount: (state, action) => {
-      state.price += action.payload
+      state.price = action.payload
     },
+    change:(state,action)=>{
+state.new=action.payload
+    },
+   
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { increment, decrement, incrementByAmount } = DataSlice.actions
+export const { increment, decrement, incrementByAmount,change } = DataSlice.actions
 
 export default DataSlice.reducer

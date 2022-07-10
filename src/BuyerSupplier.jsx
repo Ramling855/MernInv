@@ -52,12 +52,11 @@ export default function BuyerSupplier() {
       .get("http://localhost:8080/company")
       .then((res) => {
         setRows(res.data);
-        setFlag(true);
       })
       .catch((err) => {
         console.log(err);
       });
-  }, [flag]);
+  });
 
   return (
     <div>

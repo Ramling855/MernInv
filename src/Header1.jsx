@@ -1,4 +1,6 @@
 import * as React from "react";
+import AdminHome from "./AdminHome"
+import AdminHistory from "./AdminHistory"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import { useSelector, useDispatch } from "react-redux";
@@ -9,7 +11,6 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import AddOrder from "./AddOrder";
 import Inventory from "./Inventory";
-import Signup from "./Signup";
 import HomePage from "./HomePage";
 import Payment from "./Payment";
 import BuyerSupplier from "./BuyerSupplier";
@@ -123,48 +124,29 @@ export default function Header1() {
     setOpen(false);
   };
 
-
-
-
-
-
-
-
-
   ///////////////////////rrrrrrrrrr
   const headers = {
     token: localStorage.getItem("token"),
-    
   };
 
-   
-var token = headers.token;
-// var decodedHeader = jwt_decode(token, { header: true });
-// console.log(decodedHeader);
+  var token = headers.token;
 
-var decoded = jwt_decode(token);
- var tokenData=decoded.result
-console.log(decoded.result,"decodeedd");
-console.log(headers.token,"hh")
-const[up,setUp]=useState()
-const dispatch=useDispatch()
-const [state, setState] = useState();
-useEffect(()=>{
-  setUp(tokenData)
-  setState(tokenData.role)
-  dispatch(decrement(tokenData))
-},[tokenData])
+  var decoded = jwt_decode(token);
+  var tokenData = decoded.result;
+  const [up, setUp] = useState();
+  const dispatch = useDispatch();
+  const [state, setState] = useState();
 
+  useEffect(() => {
+    setUp(tokenData);
+    setState(tokenData.role);
+    dispatch(decrement(tokenData));
+  },[]
+  );
 
-  
-
-
-  console.log(state,"addd")
-  ///////////////////rrrrrrrrr
-  if ( state === "admin") {
-  // if(state == "admin"){  
-  return (
-    
+  if (state === "admin") {
+    // if(state == "admin"){
+    return (
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
         <AppBar position="fixed" open={open}>
@@ -206,9 +188,9 @@ useEffect(()=>{
                   justifyContent: "center",
                 }}
               >
-                <Link to="/header/home">
+                <Link to="/home">
                   <HomeIcon sx={{ color: pink[500] }} />
-                  Home
+                  Admin Home
                 </Link>
               </ListItemIcon>
             </ListItem>
@@ -253,10 +235,9 @@ useEffect(()=>{
                 }}
               >
                 <Link to="/payment">
-                  
                   <MailIcon />
                   {/* {index % 2 === 0 ? <InboxIcon /> : <MailIcon />} */}
-                  PaymentMail
+                  History
                 </Link>
               </ListItemIcon>
             </ListItem>
@@ -268,12 +249,12 @@ useEffect(()=>{
             {/*if(localStorage.getItem("admin")&&(state!=='admin')){*/}
             <Route path="/inventory" element={<Inventory />} />
 
-            <Route path="/signup" element={<Signup />} />
+            {/* <Route path="/signup" element={<Signup />} /> */}
             <Route path="/Order" element={<AddOrder />} />
 
-            <Route path="/header/home" element={<HomePage />} />
+            <Route path="/home" element={<AdminHome />} />
             <Route path="/buyerSupplier" element={<BuyerSupplier />} />
-            <Route path="/payment" element={<Payment />} />
+            <Route path="/payment" element={<AdminHistory />} />
           </Routes>
         </Box>
       </Box>
@@ -365,17 +346,11 @@ useEffect(()=>{
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <DrawerHeader />
           <Routes>
-            {/*if(localStorage.getItem("admin")&&(state!=='admin')){*/}
-            {/*<Route path="/inventory" element={<Inventory />} />*/}
-            {/* <Route path="/header" element={<All />} > */}
-
-            {/* <Route path="/signup" element={<Signup />} /> */}
             <Route path="/Order" element={<AddOrder />} />
 
             <Route path="/home" element={<HomePage />} />
             <Route path="/buyerSupplier" element={<BuyerSupplier />} />
             <Route path="/payment" element={<Payment />} />
-            {/* </Route> */}
           </Routes>
         </Box>
       </Box>

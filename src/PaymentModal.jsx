@@ -1,8 +1,10 @@
 import * as React from "react";
+import axios from "axios";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Button from "@mui/material/Button";
 import { useSelector } from "react-redux";
+import { useState } from "react";
 
 const style = {
   position: "absolute",
@@ -19,19 +21,29 @@ const style = {
 };
 
 function ChildModal() {
+  const tokenData = useSelector((state) => state.Data.token)
+
   const [open, setOpen] = React.useState(false);
+  const [mail,setMail]=useState()
   const handleOpen = () => {
+axios.get(`http://localhost:8080/user/email?email=${mail}&data=${tokenData.first} ${tokenData.last}`)
+.then(()=>console.log("mail sent"))
+.catch(()=>console.log("mailerr"))
+
+    
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
   };
 
-
-  const tokenData = useSelector((state) => state.Data.token)
+const email=(e)=>{
+setMail(e.target.value)
+}
   return (
     <React.Fragment>
 <h1>Name:{`${tokenData.first} ${tokenData.last}`}</h1>
+<input type="email" onChange={email} />
       <Button onClick={handleOpen}>click to send mail</Button>
       <Modal
         hideBackdrop
@@ -41,9 +53,9 @@ function ChildModal() {
         aria-describedby="child-modal-description"
       >
         <Box sx={{ ...style, width: 200 }}>
-          <h2 id="child-modal-title">your mail sent</h2>
-          <p id="child-modal-description">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+          <h2 id="child-modal-title" style={{color:"Red"}}>your mail sent</h2>
+          <p id="child-modal-description" style={{color:"green"}}>
+            Thanks for your valuable Time "Visit again" 
           </p>
           <Button onClick={handleClose}>click here, to return</Button>
         </Box>
@@ -74,7 +86,7 @@ export default function PaymentModal() {
         aria-describedby="parent-modal-description"
       >
         <Box sx={{ ...style, width: 400 }}>
-          <h2 id="parent-modal-title">your payment succesfull</h2>
+          <h2 id="parent-modal-title" style={{color:"green"}}>your payment succesfull</h2>
           <p id="parent-modal-description">proceed further send mail</p>
           <ChildModal />
         </Box>

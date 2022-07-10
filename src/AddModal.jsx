@@ -1,7 +1,10 @@
 import { Button, Modal } from "antd";
+
+import { useSelector, useDispatch } from "react-redux";
+import { decrement, increment, incrementByAmount } from "./reducers/Dataslice";
 import { Form, Input, Select } from "antd";
 import Divider from "@mui/material/Divider";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 // import "antd/dist/antd.css";
 import EditIcon from "@mui/icons-material/Edit";
@@ -26,7 +29,7 @@ const tailLayout = {
 
 const AddModal = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-
+  const [company, setCompany] = useState([]);
   const showModal = () => {
     setIsModalVisible(true);
   };
@@ -41,32 +44,27 @@ const AddModal = () => {
   };
   const [form] = Form.useForm();
 
-  // const onGenderChange = (value) => {
-  //   switch (value) {
-  //     case "male":
-  //       form.setFieldsValue({
-  //         note: "Hi, man!",
-  //       });
-  //       return;
+  //for comapny dropdown list
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080/company")
+      .then((res) => {
+        setCompany(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
-  //     case "female":
-  //       form.setFieldsValue({
-  //         note: "Hi, lady!",
-  //       });
-  //       return;
-
-  //     case "other":
-  //       form.setFieldsValue({
-  //         note: "Hi there!",
-  //       });
-  //   }
-  // };
-
+  const dispatch=useDispatch()
+  // console.log("Company=", company);
   const onFinish = async (values) => {
+
     console.log(values);
     await axios
       .post("http://localhost:8080", values)
       .then((res) => {
+        dispatch(increment())
         alert("Record Saved");
         console.log("post", res.data);
       })
@@ -85,18 +83,6 @@ const AddModal = () => {
       Catagory: "Add catagory",
     });
   };
-
-  useEffect(() => {
-    axios
-      .get("http://localhost:8080/company")
-      .then((res) => {
-        // setRows(res.data);
-        // setFlag(true);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
 
   return (
     <>
@@ -163,17 +149,6 @@ const AddModal = () => {
           >
             <Input />
           </Form.Item>
-          <Form.Item
-            name="company"
-            label="Company"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
 
           <Form.Item
             noStyle
@@ -182,18 +157,20 @@ const AddModal = () => {
             }
           ></Form.Item>
 
-          <Form.Item
-            name={['address', 'province']}
-            noStyle
-            rules={[{ required: true, message: 'Province is required' }]}
-          >
-            <Select placeholder="Select province">
-              <Option value="Zhejiang">Zhejiang</Option>
-              <Option value="Jiangsu">Jiangsu</Option>
-            </Select>
+          <Form.Item label="Company">
+            <Input.Group compact></Input.Group>
+            <Form.Item
+              name="company"
+              noStyle
+              rules={[{ required: true, message: "Address is required" }]}
+            >
+              <Select placeholder="Select province">
+                {company.map((compa) => (
+                  <Option value={compa.CompName}>{compa.CompName}</Option>
+                ))}
+              </Select>
+            </Form.Item>
           </Form.Item>
-          
-
 
           <Form.Item {...tailLayout}>
             <Button

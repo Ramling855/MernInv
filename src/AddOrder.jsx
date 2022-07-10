@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { styled } from "@mui/material/styles";
+import { Form, Input, Select } from "antd";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
@@ -27,7 +28,7 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { CardActionArea } from "@mui/material";
 import Divider from "@mui/material/Divider";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 
 // import { styled } from "@mui/material/styles";
 
@@ -59,18 +60,18 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 const AddOrder = () => {
-  const [state, setState] = useState();
+  const [state, setState] = useState(1);
   const [name, setName] = useState("");
   const [rows, setRows] = useState([]);
   const [flag, setFlag] = useState(false);
   const [key, setKey] = useState();
   const [sort, setSort] = useState(1);
   const navigation = useNavigate();
-  const location = useLocation();
-  const userEmail = location.state;
-  console.log("User Email", userEmail);
+  // const location = useLocation();
+  // const userEmail = location.state;
+  // console.log("User Email", userEmail);
 
-  console.log("user Email", location.state);
+  // console.log("user Email", location.state);
 
   useEffect(() => {
     axios
@@ -85,23 +86,27 @@ const AddOrder = () => {
   }, [flag]);
 
   const increments = (row) => {
-    setState(row.qty+1)
+    setState(state + 1);
     // setState({
     //   count: state.count + 1,
     // });
   };
   const decrements = (row) => {
-    setState(row.qty-1)
+    setState(state - 1);
     // setState({
     //   count: state.count - 1,
     // });
   };
+
+  //qty textbox
+  const onQtyChange = (e) => {
+    setState(e.target.value);
+  };
   const dispatch = useDispatch();
 
+  const tokenData = useSelector((state) => state.Data.token);
 
-const tokenData = useSelector((state) => state.Data.token)
-
-console.log("tokenData.first",tokenData.first)
+  console.log("tokenData.first", tokenData.first);
   const OnbuybtnHandle = async (e) => {
     console.log(e, state, name);
 
@@ -111,16 +116,18 @@ console.log("tokenData.first",tokenData.first)
       alert(`Only ${e.qty} are left in stock ... order bellow ${e.qty}`);
     } else {
       let data = {
+
         order: e,
         orderQty: state,
-        custName: tokenData.first,
-        total: state* e.price,
+        email: tokenData.email,
+        total: state * e.price,
       };
       console.log("data", data);
       await axios
         .post("http://localhost:8080/order", data)
         .then((res) => {
           alert("Order Placed");
+         
           console.log("post", res.data);
         })
         .catch((err) => {
@@ -167,12 +174,7 @@ console.log("tokenData.first",tokenData.first)
     <div>
       <Box sx={{ flexGrow: 1, marginBottom: 1, marginTop: 1, marginRight: 3 }}>
         <Grid container direction="row" justifyContent="right">
-          <TextField
-             label={`${tokenData.first} ${tokenData.last}`}
-            // value=""
-            // onChange={(e) => setName(e.target.value)}
-            color="secondary"
-          />
+          <Form.Item name="qty" label={tokenData.email}></Form.Item>
         </Grid>
       </Box>
       <Divider />
@@ -220,13 +222,26 @@ console.log("tokenData.first",tokenData.first)
                 <StyledTableCell align="center">{row.name}</StyledTableCell>
                 <StyledTableCell align="center">{row.qty}</StyledTableCell>
                 <StyledTableCell align="center">
-                  <IconButton aria-label="decrement" onClick={()=>decrements(row)}>
+                  <TextField
+                    name="orderQty"
+                    onChange={onQtyChange}
+                    color="secondary"
+                    style={{ width: "45px" }}
+                    focused
+                  />
+                  {/* <IconButton
+                    aria-label="decrement"
+                    onClick={() => decrements(row)}
+                  >
                     <RemoveSharpIcon />
                   </IconButton>
                   <span>{state}</span>
-                  <IconButton aria-label="increment" onClick={()=>increments(row)}>
+                  <IconButton
+                    aria-label="increment"
+                    onClick={() => increments(row)}
+                  >
                     <AddBoxSharpIcon />
-                  </IconButton>
+                  </IconButton> */}
                 </StyledTableCell>
                 <StyledTableCell align="center">{row.price}</StyledTableCell>
                 <StyledTableCell align="center">

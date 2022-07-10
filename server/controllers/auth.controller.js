@@ -1,7 +1,7 @@
 const User = require("../models/User");
 const { passwordCompare, jwtGen } = require("../utils/utils");
 const signup = (req, res) => {
-  console.log(req.body);
+  console.log(req.body,"datasignup");
   const user = new User({
     first: req.body.first,
     last: req.body.last,
@@ -9,6 +9,11 @@ const signup = (req, res) => {
     password: req.body.password,
     role: req.body.role,
     address:req.body.address,
+    data:[{
+      name:req.body.name,
+      price:req.body.price
+    }],
+    
   });
 
   user

@@ -1,7 +1,7 @@
 import { Button, Modal } from "antd";
 import axios from "axios";
 import { Form, Input, Select } from "antd";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "antd/dist/antd.css";
 import EditIcon from "@mui/icons-material/Edit";
 

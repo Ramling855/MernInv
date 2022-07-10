@@ -1,11 +1,15 @@
 import { Button, Modal } from "antd";
+
+import { useSelector, useDispatch } from "react-redux";
+import { decrement, increment, incrementByAmount } from "./reducers/Dataslice";
 import axios from "axios";
 import { Form, Input, Select } from "antd";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "antd/dist/antd.css";
 import EditIcon from "@mui/icons-material/Edit";
 
 import TextField from "@mui/material/TextField";
+import { useNavigate } from "react-router-dom";
 
 const { Option } = Select;
 const layout = {
@@ -25,7 +29,8 @@ const tailLayout = {
 
 const AddStockEdit = (props) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-
+  const navigate = useNavigate();
+  const [company, setCompany] = useState([]);
   const showModal = () => {
     setIsModalVisible(true);
   };
@@ -37,11 +42,25 @@ const AddStockEdit = (props) => {
 
   const id = props.id._id;
 
+  //for comapny dropdown list
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080/company")
+      .then((res) => {
+        setCompany(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+  const dispatch=useDispatch()
   const onFinish = (values) => {
     axios
       .put(`http://localhost:8080/edit/${id}`, values)
       .then((res) => {
+        dispatch(increment())
         alert("Record Updated");
+        navigate("/inventory");
         console.log("post", res.data);
       })
       .catch((err) => {
@@ -116,16 +135,19 @@ const AddStockEdit = (props) => {
           >
             <Input />
           </Form.Item>
-          <Form.Item
-            name="company"
-            label="Company"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-            <Input />
+          <Form.Item label="Company">
+            <Input.Group compact></Input.Group>
+            <Form.Item
+              name="company"
+              noStyle
+              rules={[{ required: true, message: "Address is required" }]}
+            >
+              <Select placeholder="Select province">
+                {company.map((compa) => (
+                  <Option value={compa.CompName}>{compa.CompName}</Option>
+                ))}
+              </Select>
+            </Form.Item>
           </Form.Item>
 
           <Form.Item

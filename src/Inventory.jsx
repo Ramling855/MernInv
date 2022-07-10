@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useSelector } from 'react-redux'
+
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
@@ -18,6 +20,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Divider } from "@mui/material";
+import TablePagination from "@mui/material/TablePagination";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -40,15 +43,33 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export default function Inventory() {
+  const num = useSelector((state) => state.Data.value)
+
   const [rows, setRows] = useState([]);
   const [flag, setFlag] = useState(false);
   const [key, setKey] = useState();
   const [sort, setSort] = useState(1);
+  const [del,setDel]=useState(1);
+  // //pagination
+  // const [page, setPage] = React.useState(0);
+  // const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  // const handleChangePage = (event, newPage) => {
+  //   setPage(newPage);
+  // };
+
+  // const handleChangeRowsPerPage = (event) => {
+  //   setRowsPerPage(parseInt(event.target.value, 10));
+  //   setPage(0);
+  // };
+  // const emptyRows =
+  //   rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   const onDeleteHandle = async (i) => {
+    
     await axios
       .delete(`http://localhost:8080/delete/${i}`)
       .then((res) => {
+        setDel(del+1)
         setFlag(true);
         alert("Record Deleted Sucesfully.");
       })
@@ -62,12 +83,32 @@ export default function Inventory() {
       .get("http://localhost:8080")
       .then((res) => {
         setRows(res.data);
-        setFlag(true);
       })
       .catch((err) => {
         console.log(err);
       });
-  }, [flag]);
+  },[]);
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080")
+      .then((res) => {
+        setRows(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  },[num,del]);
+  
+  // useEffect(() => {
+  //   axios
+  //     .get("http://localhost:8080")
+  //     .then((res) => {
+  //       setRows(res.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // },[del]);
 
   //search
   const onSerachHandle = (e) => {
@@ -140,118 +181,134 @@ export default function Inventory() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row, i) => (
-              <StyledTableRow key={row.name}>
-                <StyledTableCell
-                  style={
-                    row.qty === 0
-                      ? {
-                          border: "2px solid red",
-                          color: "black",
-                        }
-                      : { color: "black" }
-                  }
-                  component="th"
-                  scope="row"
-                >
-                  {i + 1}
-                </StyledTableCell>
+            {rows
+              // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((row, i) => (
+                <StyledTableRow key={row.name}>
+                  <StyledTableCell
+                    style={
+                      row.qty === 0
+                        ? {
+                            border: "2px solid red",
+                            color: "black",
+                          }
+                        : { color: "black" }
+                    }
+                    component="th"
+                    scope="row"
+                  >
+                    {i + 1}
+                  </StyledTableCell>
 
-                <StyledTableCell
-                  style={
-                    row.qty === 0
-                      ? {
-                          border: "2px solid red",
-                          color: "black",
-                        }
-                      : { color: "black" }
-                  }
-                  align="center"
-                >
-                  {row.name}
-                </StyledTableCell>
-                <StyledTableCell
-                  style={
-                    row.qty === 0
-                      ? {
-                          border: "2px solid red",
-                          color: "red",
-                        }
-                      : { color: "black" }
-                  }
-                  align="center"
-                >
-                  {row.qty}
-                </StyledTableCell>
-                <StyledTableCell
-                  style={
-                    row.qty === 0
-                      ? {
-                          border: "2px solid red",
-                          color: "black",
-                        }
-                      : { color: "black" }
-                  }
-                  align="center"
-                >
-                  {row.price}
-                </StyledTableCell>
-                <StyledTableCell
-                  style={
-                    row.qty === 0
-                      ? {
-                          border: "2px solid red",
-                          color: "black",
-                        }
-                      : { color: "black" }
-                  }
-                  align="center"
-                >
-                  {row.catagory}
-                </StyledTableCell>
-                <StyledTableCell
-                  style={
-                    row.qty === 0
-                      ? {
-                          border: "2px solid red",
-                          color: "black",
-                        }
-                      : { color: "black" }
-                  }
-                  align="center"
-                >
-                  {row.company}
-                </StyledTableCell>
-                <StyledTableCell
-                  style={
-                    row.qty === 0
-                      ? {
-                          border: "2px solid red",
-                          color: "black",
-                        }
-                      : { color: "black" }
-                  }
-                  align="center"
-                >
-                  <AddStockEdit id={row} />
-                </StyledTableCell>
-                <StyledTableCell
-                  style={
-                    row.qty === 0
-                      ? {
-                          border: "2px solid red",
-                          color: "black",
-                        }
-                      : { color: "black" }
-                  }
-                  align="center"
-                >
-                  <DeleteIcon onClick={() => onDeleteHandle(row._id)} />
-                </StyledTableCell>
-              </StyledTableRow>
-            ))}
+                  <StyledTableCell
+                    style={
+                      row.qty === 0
+                        ? {
+                            border: "2px solid red",
+                            color: "black",
+                          }
+                        : { color: "black" }
+                    }
+                    align="center"
+                  >
+                    {row.name}
+                  </StyledTableCell>
+                  <StyledTableCell
+                    style={
+                      row.qty === 0
+                        ? {
+                            border: "2px solid red",
+                            color: "red",
+                          }
+                        : { color: "black" }
+                    }
+                    align="center"
+                  >
+                    {row.qty}
+                  </StyledTableCell>
+                  <StyledTableCell
+                    style={
+                      row.qty === 0
+                        ? {
+                            border: "2px solid red",
+                            color: "black",
+                          }
+                        : { color: "black" }
+                    }
+                    align="center"
+                  >
+                    {row.price}
+                  </StyledTableCell>
+                  <StyledTableCell
+                    style={
+                      row.qty === 0
+                        ? {
+                            border: "2px solid red",
+                            color: "black",
+                          }
+                        : { color: "black" }
+                    }
+                    align="center"
+                  >
+                    {row.catagory}
+                  </StyledTableCell>
+                  <StyledTableCell
+                    style={
+                      row.qty === 0
+                        ? {
+                            border: "2px solid red",
+                            color: "black",
+                          }
+                        : { color: "black" }
+                    }
+                    align="center"
+                  >
+                    {row.company}
+                  </StyledTableCell>
+                  <StyledTableCell
+                    style={
+                      row.qty === 0
+                        ? {
+                            border: "2px solid red",
+                            color: "black",
+                          }
+                        : { color: "black" }
+                    }
+                    align="center"
+                  >
+                    <AddStockEdit id={row} />
+                  </StyledTableCell>
+                  <StyledTableCell
+                    style={
+                      row.qty === 0
+                        ? {
+                            border: "2px solid red",
+                            color: "black",
+                          }
+                        : { color: "black" }
+                    }
+                    align="center"
+                  >
+                    <DeleteIcon onClick={() => onDeleteHandle(row._id)} />
+                  </StyledTableCell>
+                </StyledTableRow>
+              ))}
+            {/* {emptyRows > 0 && (
+              <TableRow style={{ height: 53 * emptyRows }}>
+                <TableCell colSpan={6} />
+              </TableRow>
+            )} */}
           </TableBody>
         </Table>
+        {/* <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={rows.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onChangePage={handleChangePage}
+          onChangeRowsPerPage={handleChangeRowsPerPage}
+        /> */}
       </TableContainer>
     </div>
   );

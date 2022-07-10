@@ -19,7 +19,7 @@ class InventryController {
       let newData = new orderModel({
         custName: req.body.custName,
         name: req.body.order.name,
-        // email: req.body.order.email,
+        email: req.body.email,
         qty: req.body.orderQty,
         price: req.body.order.price,
         totalPrice: req.body.total,
@@ -46,14 +46,31 @@ class InventryController {
   };
 
   static findOrderByEmail = async (req, res) => {
-    // console.log(req.params.id);
+    console.log(req.query.email);
     try {
-      const List = await orderModel.find({ custName: req.params.id });
+      const List = await orderModel.find({ email:req.query.email});
+      // const List = await orderModel.find({});
+
       res.send(List);
     } catch (err) {
       console.log(err);
     }
   };
+
+
+  static deleteOrder = async (req, res) => {
+    console.log(req.query.id);
+    try {
+      const List = await orderModel.deleteOne({_id:req.query.id });
+      // const List = await orderModel.find({});
+
+      res.send(List);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+
 
   // console.log(req.params.id);
   //   try {

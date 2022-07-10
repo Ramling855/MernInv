@@ -23,6 +23,14 @@ const Userschema=new mongoose.Schema({
     },
     last:{
         type:String
+    },
+    data:{
+        custName: { type: String },
+        name : {String},
+        qty: { type: Number },
+        price: { type: Number },
+        totalPrice: { type: Number },
+        company: { type: String },
     }
 
      
@@ -33,4 +41,4 @@ const Userschema=new mongoose.Schema({
     timestamps:true
 })
 
-module.exports=mongoose.model("tata",Userschema)
+module.exports=mongoose.model("data",Userschema)

@@ -1,7 +1,7 @@
 import * as React from "react";
 import jwt_decode from "jwt-decode";
+import LogoutIcon from '@mui/icons-material/Logout';
 
-import { useSelector } from 'react-redux'
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { Link } from "react-router-dom";
 import Box from "@mui/material/Box";
@@ -19,12 +19,25 @@ import Logout from "@mui/icons-material/Logout";
 
 
 
+import { useSelector, useDispatch } from "react-redux";
+import { decrement, increment, incrementByAmount,change } from "./reducers/Dataslice";
+import { useNavigate } from "react-router-dom";
+
 
 
 
 
 
 export default function Header() {
+
+  const dispatch=useDispatch()
+  const navigate=useNavigate()
+const handleclick=()=>{
+  localStorage.removeItem("token")
+navigate("/")
+dispatch(incrementByAmount("change"))
+}
+
 
   const headers = {
     token: localStorage.getItem("token"),
@@ -49,7 +62,7 @@ var decoded = jwt_decode(token);
 
 
   const num = useSelector((state) => state.Data.value)
-  console.log(num)
+  // console.log(num)
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -64,30 +77,22 @@ var decoded = jwt_decode(token);
         <Box
           sx={{ display: "flex", alignItems: "centre", textAlign: "centre" }}
         >
-          <Typography sx={{ minWidth: 100 }}>
-            <Link to="/signin">Sign in</Link>
-          </Typography>
           
-          <Typography sx={{ minWidth: 100 }}>
-            <Link to="/signup">Signup</Link>
-          </Typography>
-          <Typography sx={{ minWidth: 100 }}>
-            {/* <Link to="/home">home</Link> */}
-          </Typography>
           <Tooltip title="Account settings">
             <IconButton
               onClick={handleClick}
               size="small"
-              sx={{ ml: 70 }}
+              sx={{ ml: 0 }}
               aria-controls={open ? "account-menu" : undefined}
               aria-haspopup="true"
               aria-expanded={open ? "true" : undefined}
             >
-              <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
+              <label htmlFor="">Logout</label>
+              <Avatar sx={{ width: 32, height: 32 }}><LogoutIcon/></Avatar>
             </IconButton>
           </Tooltip>
         </Box>
-        <AddShoppingCartIcon/><label>{num}</label>
+        
         <Menu
           anchorEl={anchorEl}
           id="account-menu"
@@ -144,11 +149,11 @@ var decoded = jwt_decode(token);
             </ListItemIcon>
             Address:{tokenData.address}
           </MenuItem>
-          <MenuItem>
+          <MenuItem onClick={handleclick}>
             <ListItemIcon>
               <Logout fontSize="small" />
             </ListItemIcon>
-            Logout
+           <h3 >Logout</h3> 
           </MenuItem>
         </Menu>
       </React.Fragment>

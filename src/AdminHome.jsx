@@ -52,7 +52,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     border: 0,
   },
 }));
-const HomePage = () => {
+const AdminHome = () => {
   const [rows, setRows] = useState([]);
   const [flag, setFlag] = useState(false);
   const navigate = useNavigate();
@@ -74,8 +74,9 @@ const HomePage = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8080/userOrder/?email=${tokenData.email}`)
+      .get(`http://localhost:8080/order`)
       .then((res) => {
+        // console.log(res,"ttttttt")
         setRows(res.data);
       })
       .catch((err) => {
@@ -90,7 +91,7 @@ const HomePage = () => {
 
   return (
     <div>
-      <h3>Logged In {`${tokenData.first} ${tokenData.last}`} , Welcome ....</h3>
+      <h3>Admin Logged In {`${tokenData.first} ${tokenData.last}`} , Welcome ....</h3>
       <Stack direction="row" spacing={4}>
         <Card sx={{ maxWidth: 250 }}>
           <CardActionArea>
@@ -194,4 +195,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default AdminHome;

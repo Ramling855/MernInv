@@ -1,4 +1,5 @@
 const express = require("express");
+const sendEmail=require("../controllers/email")
 const inventryController = require("../controllers/inventryController");
 const orderController = require("../controllers/orderController");
 const BuyerController = require("../controllers/Buyer");
@@ -35,12 +36,12 @@ router.get("/order", orderController.getData);
 router.post("/order", orderController.create);
 //http://localhost:8080/order/ ==> post
 
-router.get("/userOrder/:id", orderController.findOrderByEmail);
+router.get("/userOrder", orderController.findOrderByEmail);
+
+router.delete("/userOrder/delete", orderController.deleteOrder);
 //http://localhost:8080/userOrder/62bee4f925aa03ecac761e07 ==> get
 
 //routers for buyer/supllier
-
-//routes for inventry
 
 router.get("/company", BuyerController.getData);
 //http://localhost:8080/company ==> get
@@ -50,5 +51,13 @@ router.post("/company", BuyerController.create);
 
 router.delete("/company/delete/:id", BuyerController.delete);
 //http://localhost:8080/company/delete/62bee4f925aa03ecac761e07 ==> delete
+
+router.get("/companyName", BuyerController.getCompany);
+//http://localhost:8080/company ==> get
+router.get("/user/email",(req,res)=>{
+    console.log(req.query)
+    // sendEmail(req.query.mail,req.query.price)
+    //   res.send( "done" );
+})
 
 module.exports = router;
