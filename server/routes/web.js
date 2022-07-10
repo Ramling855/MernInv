@@ -56,8 +56,8 @@ router.get("/companyName", BuyerController.getCompany);
 //http://localhost:8080/company ==> get
 router.get("/user/email",(req,res)=>{
     console.log(req.query)
-    // sendEmail(req.query.mail,req.query.price)
-    //   res.send( "done" );
+     sendEmail(req.query.email,req.query.data)
+     res.send( "done" );
 })
 
 module.exports = router;

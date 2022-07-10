@@ -13,7 +13,7 @@ import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import { useSelector, useDispatch } from "react-redux";
-import { decrement, increment, incrementByAmount } from "./reducers/Dataslice";
+import {ptm, decrement, increment, incrementByAmount } from "./reducers/Dataslice";
 import TablePagination from "@mui/material/TablePagination";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
@@ -108,6 +108,8 @@ const AddOrder = () => {
 
   console.log("tokenData.first", tokenData.first);
   const OnbuybtnHandle = async (e) => {
+
+    dispatch(ptm("Red"))
     console.log(e, state, name);
 
     if (e.qty < 1) {

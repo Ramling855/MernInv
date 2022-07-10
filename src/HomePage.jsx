@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
+import { useSelector } from "react-redux";
 
 import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
@@ -87,6 +88,7 @@ const HomePage = () => {
   //   console.log("use Email =", tokenData.email);
   //   navigate("/Order", { state: tokenData.email });
   // };
+  const pay = useSelector((state) => state.Data.pay);
 
   return (
     <div>
@@ -167,7 +169,7 @@ const HomePage = () => {
                     {i + 1}
                   </StyledTableCell>
                   <StyledTableCell component="th" scope="row">
-                    {row.custName}
+                    {row.email}
                   </StyledTableCell>
                   <StyledTableCell align="center">{row.name}</StyledTableCell>
                   <StyledTableCell align="center">{row.qty}</StyledTableCell>
@@ -176,10 +178,18 @@ const HomePage = () => {
                     {row.totalPrice}
                   </StyledTableCell>
                   <StyledTableCell align="center" style={{ color: "green" }}>
-                    Status:Sucess
+                  {pay==="green"? <span style={{color:"green"}}>
+                      Status:"sucess"
+                    </span>:<span style={{color:"red"}}>
+                      Status:"Pending"
+                    </span>}
                   </StyledTableCell>
                   <StyledTableCell align="center" style={{ color: "green" }}>
-                    Status:Sucess
+                  {pay==="green"? <span style={{color:"green"}}>
+                      Status:"sucess"
+                    </span>:<span style={{color:"red"}}>
+                      Status:"Pending"
+                    </span>}
                   </StyledTableCell>
                 </StyledTableRow>
               ))}

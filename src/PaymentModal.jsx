@@ -3,7 +3,9 @@ import axios from "axios";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Button from "@mui/material/Button";
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
+import { decrement, increment, incrementByAmount,change,ptm } from "./reducers/Dataslice";
+
 import { useState } from "react";
 
 const style = {
@@ -21,11 +23,14 @@ const style = {
 };
 
 function ChildModal() {
+  const dispatch=useDispatch()
   const tokenData = useSelector((state) => state.Data.token)
 
   const [open, setOpen] = React.useState(false);
   const [mail,setMail]=useState()
   const handleOpen = () => {
+
+    dispatch(ptm("green"))
 axios.get(`http://localhost:8080/user/email?email=${mail}&data=${tokenData.first} ${tokenData.last}`)
 .then(()=>console.log("mail sent"))
 .catch(()=>console.log("mailerr"))

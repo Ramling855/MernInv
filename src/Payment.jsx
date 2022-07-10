@@ -49,8 +49,9 @@ export default function Payment() {
   const [key, setKey] = useState(1);
   const [payment, setPayment] = useState("Pending");
   const [mail, setMail] = useState("Pending");
+  var [total, setTotal] = useState();
 
-  // const tokenData = useSelector((state) => state.Data.token);
+  const pay = useSelector((state) => state.Data.pay);
 
   const headers = {
     token: localStorage.getItem("token"),
@@ -72,8 +73,8 @@ export default function Payment() {
       .catch((err) => {
         console.log(err);
       });
-  },[]);
-  
+  }, []);
+
   useEffect(() => {
     axios
       .get(`http://localhost:8080/userOrder?email=${tokenData.email}`)
@@ -83,32 +84,23 @@ export default function Payment() {
       .catch((err) => {
         console.log(err);
       });
-  },[key]);
+  }, [key]);
 
-  const statusHandler = (e) => {
-    console.log(e);
-    setPayment("Sucess");
-    alert("Payment Sucessfull");
+
+  const Delete = (e) => {
+    console.log(e._id, "daleteaa");
+
+    axios
+      .delete(`http://localhost:8080/userOrder/delete?id=${e._id}`)
+      .then((res) => {
+        setKey(key + 1);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
-
-  const onMailsend = (e) => {
-    setMail("Sucess");
-    alert("Payment Sucessfull");
-  };
-
-const Delete=(e)=>{
-console.log(e._id,"daleteaa")
-
-  axios
-  .delete(`http://localhost:8080/userOrder/delete?id=${e._id}`)
-  .then((res) => {
-    setKey(key+1)
-  })
-  .catch((err) => {
-    console.log(err);
-  });
-}
-
+  var [grand] = useState(0);
+  rows.map((ele) => (grand += ele.totalPrice));
 
   return (
     <div>
@@ -139,7 +131,6 @@ console.log(e._id,"daleteaa")
                 <StyledTableCell align="center">Payment</StyledTableCell>
                 <StyledTableCell align="center">Mail Send</StyledTableCell>
                 <StyledTableCell align="center">Delete order</StyledTableCell>
-
               </TableRow>
             </TableHead>
             <TableBody>
@@ -149,7 +140,7 @@ console.log(e._id,"daleteaa")
                     {i + 1}
                   </StyledTableCell>
                   <StyledTableCell component="th" scope="row">
-                    {row.custName}
+                    {`${tokenData.first} ${tokenData.last}`}
                   </StyledTableCell>
                   <StyledTableCell align="center">{row.name}</StyledTableCell>
                   <StyledTableCell align="center">{row.qty}</StyledTableCell>
@@ -157,29 +148,41 @@ console.log(e._id,"daleteaa")
                   <StyledTableCell align="center">
                     {row.totalPrice}
                   </StyledTableCell>
-                  
-                  <StyledTableCell align="center">
-                    
-                    <span onClick={() => statusHandler(row)}>
-                      Status:{payment}
-                    </span>
-                  </StyledTableCell>
-                  <StyledTableCell align="center" style={{ color: "red" }}>
-                    Status:{mail}
+
+                 <StyledTableCell align="center">
+                   {pay==="green"? <span style={{color:"green"}}>
+                      Status:"sucess"
+                    </span>:<span style={{color:"red"}}>
+                      Status:"Pending"
+                    </span>}
                   </StyledTableCell>
                   <StyledTableCell align="center">
-                    <button onClick={()=>Delete(row)}>delete</button>
+                  {pay==="green"? <span style={{color:"green"}}>
+                      Status:"sucess"
+                    </span>:<span style={{color:"red"}}>
+                      Status:"Pending"
+                    </span>}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    <button onClick={() => Delete(row)}>delete</button>
                   </StyledTableCell>
                 </StyledTableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
+        <br />
+        <Divider />
+        {pay==="green"?<h1  style={{color:"green"}} >
+          Grand Total =<span >{grand}</span>
+        </h1> :<h1  style={{color:"red"}} >
+          Grand Total =<span >{grand}</span>
+        </h1>}
         {/* <Stack spacing={2} sx={{ mt: 2, ml: 42 }}>
           <Pagination count={10} variant="outlined" shape="rounded" />
         </Stack> */}
       </div>
-      <PaymentModal onClick={onMailsend} />
+      <PaymentModal  />
     </div>
   );
 }

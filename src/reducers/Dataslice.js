@@ -4,7 +4,8 @@ const initialState = {
   value: 0,
   price:"",
   token:{},
-  new:""
+  new:"",
+  pay:"",
 }
 
 export const DataSlice = createSlice({
@@ -23,11 +24,14 @@ export const DataSlice = createSlice({
     change:(state,action)=>{
 state.new=action.payload
     },
+    ptm:(state,action)=>{
+state.pay=action.payload
+    }
    
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { increment, decrement, incrementByAmount,change } = DataSlice.actions
+export const { ptm,increment, decrement, incrementByAmount,change } = DataSlice.actions
 
 export default DataSlice.reducer
